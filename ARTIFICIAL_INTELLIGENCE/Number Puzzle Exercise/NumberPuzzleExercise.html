@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/themes/prism.min.css" rel="stylesheet" />
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/components/prism-core.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.17.1/plugins/autoloader/prism-autoloader.min.js"></script>
+	<style>
+		body {
+			padding: 10px 15px;
+		}
+		h2 {
+			margin-top: 20px;
+		}
+		.pic {position: relative;}
+		#a ,#b ,#c ,#d ,#e ,#f ,#g ,#h ,#i ,#j { width: 40px; height: 40px; background-color: #fff; position: absolute; text-align: center; font-size: 24px;}
+		#a {top: 15px; left: 205px;}
+		#b {top: 146px; left: 17px;}
+		#c {top: 146px; left: 160px;}
+		#d {top: 146px; left: 250px;}
+		#e {top: 146px; left: 387px;}
+		#f {top: 230px; left: 137px;}
+		#g {top: 230px; left: 273px;}
+		#h {top: 278px; left: 204px;}
+		#i {bottom: 20px; left: 94px;}
+		#j {bottom: 20px; left: 319px;}
+	</style>
+</head>
+<body>
+	
+	<ul class="list-group list-group-horizontal">
+		<li class="list-group-item"><a href="#s1">(a)</a></li>
+		<li class="list-group-item"><a href="#heuristic_function">(b)</a></li>
+		<li class="list-group-item"><a href="#count">(c)</a></li>
+	</ul>
+	<h2 id="s1">(a) Use Breadth First Search and Depth First Search to find out possible solution(s).</h2>
+	<div class="card-group">
+		<div class="card">
+			<div class="card-body">
+			<h4 class="card-title"><h3 id="BFS">BFS</h3></h4>
+			<pre class="language-javascript"><code>
+			function traverseBFS(root) {
+				let stack = [ root ];
+				let explored = [];
+				let isFound = false;
+				let resolve;
+
+				while (stack.length > 0 && !isFound) {
+					let curr = stack.pop();
+					let currNodes = [];
+					explored.push(curr);
+
+					if (curr.state.length === 10) {
+						if (TEST_GOAL(curr.state)) {
+							resolve = curr;
+							isFound = true;
+							console.log('find:', curr);
+						}
+					}
+
+					//Expand node
+					currNodes = expand(curr, explored);
+					if (currNodes.length > 0) {
+						stack.push(...currNodes);
+					}
+
+				}
+				return resolve;
+			}	
+			</code></pre>
+			</div>
+		</div>
+		<div class="card">
+		  <div class="card-body">
+			<h4 class="card-title"><h3 id="DFS">DFS</h3></h4>
+			<pre class="language-javascript">
+			<code>
+			function traverseDFS(root) {
+				let stack = [ root ];
+				let explored = [];
+				let isFound = false;
+				let resolve;
+
+				while (stack.length > 0 && !isFound) {
+					let curr = stack.shift();
+					let currNodes = [];
+					explored.push(curr);
+
+					if (curr.state.length === 10) {
+						if (TEST_GOAL(curr.state)) {
+							resolve = curr;
+							isFound = true;
+							console.log('find:', curr);
+						}
+					}
+
+					//Expand node
+					currNodes = expand(curr, explored);
+					if (currNodes.length > 0) {
+						stack.push(...currNodes);
+					}
+
+				}
+
+				return resolve;
+			}
+			</code>
+			</pre>
+		  </div>
+		</div>
+		
+	</div>
+
+	<div class="card-group">
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title"><h3>Uniform Cost Search</h3></h4>
+				<pre class="language-javascript"><code>
+				function uniformCostSearch(root) {
+					let stack = [ root ];
+					let explored = [];
+					let isFound = false;
+					let resolve;
+			
+					while (stack.length > 0 && !isFound) {
+						let curr = findMin(stack);
+						let currNodes = [];
+						explored.push(curr);
+						console.log(curr);
+			
+			
+						if (curr.state.length === 10) {
+							if (TEST_GOAL(curr.state)) {
+								resolve = curr;
+								isFound = true;
+								console.log('find:', curr);
+							}
+						}
+			
+						//Expand node
+						currNodes = expand2(curr, explored);
+						if (currNodes.length > 0) {
+							stack.push(...currNodes);
+						}
+			
+					}
+			
+					return resolve;
+				};
+				</code></pre>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<h4 class="card-title"><h3>Brute Force</h3></h4>
+				<pre class="language-javascript">
+				<code>
+				function BruteForce() {
+					let solution = [];
+					let max = 10;
+					for(let a =1; a<= max; a++) {
+						for (let b = 1; b <= max; b++) {
+							if(a === b) { continue; }
+							for (let c = 1; c <= max; c++) {
+								if(c === a || c === b) { continue; }
+								for (let d = 1; d <= max; d++) {
+									if(d === c || d === a || d === b) { continue; }
+									if(a+c+d != 19) 
+										continue
+									for (let e = 1; e <= max; e++) {
+										if(e === d || e === c || e === a || e === b) { continue; }
+										if (a+d+e != 18)
+											continue
+										for (let f = 1; f <= max; f++) {
+											if(f === e || f === d || f === c || f === a || f === b) { continue; }
+											if(b+c+f !=11)
+												continue
+											for (let g = 1; g <= max; g++) {
+												if(g === f || g === e || g === d || g === c || g === a || g === b) { continue; }
+												if(d+e+g != 16)
+													continue
+												for (let h = 1; h <= max; h++) {
+													if(h === g || h === f || h === e || h === d || h === c || h === a || h === b) { continue; }
+													for (let i = 1; i <= max; i++) {
+														if(i === h || i === g || i === f || i === e || i === d || i === c || i === a || i === b) { continue; }
+														if (f+h+i != 17)
+															continue
+														for (let j = 1; j <= max; j++) {
+															if(j === i || j === h || j === g || j === f || j === e || j === d || j === c || j === a || j === b) { continue; }
+															if(g+h+j != 22)
+																continue
+															if (TEST_GOAL([a,b,c,d,e,f,g,h,i,j])) {
+																solution.push([a,b,c,d,e,f,g,h,i,j]);
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+
+					return solution;
+				}
+				</code>
+				</pre>
+			</div>
+
+		</div>
+	</div>
+	
+
+	<h2 id="heuristic_function">(b) Using the solution found, invent a heuristic function f (e.g. node level + f(n) ) to find the route to the solution.</h2>
+	<div class="card">
+		<div class="card-body">
+			<h4 class="card-title"><h3>heuristic function</h3></h4>
+			<pre class="language-javascript">
+			<code>
+			function heuristics(state) {
+				let cost = 0;
+				let _temp = [...state];
+		
+				while (_temp.length < 10) {
+					_temp.push(0);
+				}
+				
+				cost = Math.abs(18 - (_temp[N['A']] + _temp[N['D']] + _temp[N['E']]));
+				cost += Math.abs(19 - (_temp[N['A']] + _temp[N['C']] + _temp[N['D']]));
+				cost += Math.abs(16 - (_temp[N['D']] + _temp[N['E']] + _temp[N['G']]));
+				cost += Math.abs(22 - (_temp[N['G']] + _temp[N['H']] + _temp[N['J']]));
+				cost += Math.abs(17 - (_temp[N['F']] + _temp[N['H']] + _temp[N['I']]));
+				cost += Math.abs(11 - (_temp[N['B']] + _temp[N['C']] + _temp[N['F']]));
+				
+		
+				return cost;
+			}
+			</code>
+			</pre>
+		</div>
+	</div>
+	
+	<h2 id="count">For these three methods also count the nodes expanded for finding the solution(s).</h2>
+	<h3 class="mt-2 text-danger">Only Test on Chrome</h3>
+	<p>Open this file with browser. Click following button to test these function</p>
+	<div class="btn-group btn-group-lg" role="group" aria-label="Basic example">
+		<button type="button" class="btn btn-outline-primary" onclick="run('BFS')">BFS</button>
+		<button type="button" class="btn btn-outline-primary" onclick="run('DFS')">DFS</button>
+		<button type="button" class="btn btn-outline-primary" onclick="run('UCS')">Uniform Cost Search</button>
+		<button type="button" class="btn btn-outline-primary" onclick="run('BF')">Brute Force</button>
+	</div>
+	<p>Solution : [A -> 9, B -> 6, E -> 2, F -> 8, G -> 1, H -> 3, H -> 7, I -> 10, J -> 4, K -> 5] </p>
+	<p >Nodes depth: <span id="depth">10</span></p>
+	<div class="pic">
+		<img src="Number Exercise.gif"  alt=""/>
+		<div class="border" id="a"></div>
+		<div class="border" id="b"></div>
+		<div class="border" id="c"></div>
+		<div class="border" id="d"></div>
+		<div class="border" id="e"></div>
+		<div class="border" id="f"></div>
+		<div class="border" id="g"></div>
+		<div class="border" id="h"></div>
+		<div class="border" id="i"></div>
+		<div class="border" id="j"></div>	
+	</div>
+
+	<script>
+		function worker_function(params) {
+		let initArr = [];
+		
+		/* 
+		ADE = 18
+		ACD = 19
+		DEG = 16
+		GHJ = 22
+		FHI = 17
+		BCF = 11
+		
+		Correct: [9, 6, 2, 8, 1, 3, 7, 10, 4, 5]
+		*/
+		
+		// initArr = [0, 0, 2, 0, 1, 3, 0, 0, 0, 0];
+		
+		const N = {
+			A: 0,
+			B: 1,
+			C: 2,
+			D: 3,
+			E: 4,
+			F: 5,
+			G: 6,
+			H: 7,
+			I: 8,
+			J: 9,
+			0: 'A',
+			1: 'B',
+			2: 'C',
+			3: 'D',
+			4: 'E',
+			5: 'F',
+			6: 'G',
+			7: 'H',
+			8: 'I',
+			9: 'J'
+		};
+		
+		function TEST_GOAL(arr) {
+			let result = arr[N['A']] + arr[N['D']] + arr[N['E']] === 18;
+		
+			result &= arr[N['A']] + arr[N['C']] + arr[N['D']] === 19;
+			result &= arr[N['D']] + arr[N['E']] + arr[N['G']] === 16;
+			result &= arr[N['G']] + arr[N['H']] + arr[N['J']] === 22;
+			result &= arr[N['F']] + arr[N['H']] + arr[N['I']] === 17;
+			result &= arr[N['B']] + arr[N['C']] + arr[N['F']] === 11;
+		
+			return result;
+		}
+		
+		function possibleNode(arr) {
+		
+			if(!!arr[N['A']] && !!arr[N['D']] && !!arr[N['E']]) {
+				if(arr[N['A']] + arr[N['D']] + arr[N['E']] !== 18) {
+					return false;
+				}
+			}
+			if(!!arr[N['A']] && !!arr[N['C']] && !!arr[N['D']]) {
+				if(arr[N['A']] + arr[N['C']] + arr[N['D']] !== 19) {
+					return false;
+				}
+			}
+		
+			if(!!arr[N['C']] && !!arr[N['E']]) {
+				if(arr[N['C']] - arr[N['E']] !== 1) {
+					return false;
+				}
+			}
+		
+			if(!!arr[N['A']] && !!arr[N['G']]) {
+				if(arr[N['A']] - arr[N['G']] !== 2) {
+					return false;
+				}
+			}
+		
+			if(!!arr[N['D']] && !!arr[N['E']] && !!arr[N['G']]) {
+				if(arr[N['D']] + arr[N['E']] + arr[N['G']] !== 16) {
+					return false;
+				}
+			}
+			if(!!arr[N['G']] && !!arr[N['H']] && !!arr[N['J']]) {
+				if(arr[N['G']] + arr[N['H']] + arr[N['J']] !== 22) {
+					return false;
+				}
+			}
+			if(!!arr[N['F']] && !!arr[N['H']] && !!arr[N['I']]) {
+				if(arr[N['F']] + arr[N['H']] + arr[N['I']] !== 17) {
+					return false;
+				}
+			}
+			if(!!arr[N['B']] && !!arr[N['C']] && !!arr[N['F']]) {
+				if(arr[N['B']] + arr[N['C']] + arr[N['F']] !== 11) {
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		
+		
+		function node(depth, state, cost, parent) {
+			this.depth = depth;
+			this.state = state;
+			this.cost = cost;
+			this.parent = parent;
+		}
+		
+		function expand(parent, explored) {
+			let basicArr = [1,2,3,4,5,6,7,8,9,10];
+			let qNodes = [];
+			
+			while (basicArr.length > 0) {
+				let temp = [...parent.state];
+				let basicNum = basicArr.pop();
+				let isDuplicate = false;
+		
+				if(temp.indexOf(basicNum) === -1) {
+					temp.push(basicNum);
+				}
+				
+				explored.forEach(obj => {
+					if (obj.state.join() === temp.join()) {
+						isDuplicate = true;
+					}
+				});
+		
+				qNodes.forEach(obj => {
+					if (obj.state.join() === temp.join()) {
+						isDuplicate = true;
+					}
+				});
+				
+				if (!isDuplicate && possibleNode(temp)) {
+					// qNodes.push([...temp]);
+					qNodes.push(new node(parent.depth + 1, [...temp], 0, parent));
+				}
+			}
+		
+			return qNodes;
+		
+		}
+		
+		function traverseDFS(root) {
+			let stack = [ root ];
+			let explored = [];
+			let isFound = false;
+			let resolve;
+		
+			while (stack.length > 0 && !isFound) {
+				// let curr = stack.pop();
+				let curr = stack.shift();
+				let currNodes = [];
+				explored.push(curr);
+				postMessage(curr);
+		
+				if (curr.state.length === 10) {
+					if (TEST_GOAL(curr.state)) {
+						resolve = curr;
+						isFound = true;
+						console.log('find:', curr);
+					}
+				}
+		
+				//Expand node
+				currNodes = expand(curr, explored);
+				if (currNodes.length > 0) {
+					stack.push(...currNodes);
+				}
+		
+			}
+		
+			// return explored.reverse();
+			return resolve;
+		}
+		
+		function traverseBFS(root) {
+			let stack = [ root ];
+			let explored = [];
+			let isFound = false;
+			let resolve;
+		
+			while (stack.length > 0 && !isFound) {
+				let curr = stack.pop();
+				let currNodes = [];
+				explored.push(curr);
+
+				postMessage(curr);
+		
+				if (curr.state.length === 10) {
+					if (TEST_GOAL(curr.state)) {
+						resolve = curr;
+						isFound = true;
+						console.log('find:', curr);
+					}
+				}
+		
+				//Expand node
+				currNodes = expand(curr, explored);
+				if (currNodes.length > 0) {
+					stack.push(...currNodes);
+				}
+		
+			}
+		
+			// return explored.reverse();
+			return resolve;
+		}
+		
+		
+		function BruteForce() {
+			let solution = [];
+			let max = 10;
+			let depth = 0;
+			for(let a =1; a<= max; a++) {
+				depth++;
+				postMessage({ depth, state : [a], parent : [], cost : null });
+				for (let b = 1; b <= max; b++) {
+					postMessage({ depth, state : [a,b], parent : [], cost : null });
+					if(a === b) { continue; }
+					for (let c = 1; c <= max; c++) {
+						postMessage({ depth, state : [a,b,c], parent : [], cost : null });
+						if(c === a || c === b) { continue; }
+						for (let d = 1; d <= max; d++) {
+							postMessage({ depth, state : [a,b,c,d], parent : [], cost : null });
+							if(d === c || d === a || d === b) { continue; }
+							if(a+c+d != 19) 
+								continue
+							for (let e = 1; e <= max; e++) {
+								postMessage({ depth, state : [a,b,c,d,e], parent : [], cost : null });
+								if(e === d || e === c || e === a || e === b) { continue; }
+								if (a+d+e != 18)
+									continue
+								for (let f = 1; f <= max; f++) {
+									postMessage({ depth, state : [a,b,c,d,e,f], parent : [], cost : null });
+									if(f === e || f === d || f === c || f === a || f === b) { continue; }
+									if(b+c+f !=11)
+										continue
+									for (let g = 1; g <= max; g++) {
+										postMessage({ depth, state : [a,b,c,d,e,f,g], parent : [], cost : null });
+										if(g === f || g === e || g === d || g === c || g === a || g === b) { continue; }
+										if(d+e+g != 16)
+											continue
+										for (let h = 1; h <= max; h++) {
+											postMessage({ depth, state : [a,b,c,d,e,f,g,h], parent : [], cost : null });
+											if(h === g || h === f || h === e || h === d || h === c || h === a || h === b) { continue; }
+											for (let i = 1; i <= max; i++) {
+												postMessage({ depth, state : [a,b,c,d,e,f,g,h,i], parent : [], cost : null });
+												if(i === h || i === g || i === f || i === e || i === d || i === c || i === a || i === b) { continue; }
+												if (f+h+i != 17)
+													continue
+												for (let j = 1; j <= max; j++) {
+													postMessage({ depth, state : [a,b,c,d,e,f,g,h,i], parent : [], cost : null });
+													if(j === i || j === h || j === g || j === f || j === e || j === d || j === c || j === a || j === b) { continue; }
+													if(g+h+j != 22)
+														continue
+													
+													postMessage({
+														depth,
+														state : [a,b,c,d,e,f,g,h,i,j],
+														parent : [],
+														cost : null
+													});
+													if (TEST_GOAL([a,b,c,d,e,f,g,h,i,j])) {
+														solution.push([a,b,c,d,e,f,g,h,i,j]);
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			postMessage({ depth, state : solution.pop(), parent : [], cost : null });
+		
+			return solution;
+		}
+		
+		function findMin(stack) {
+			let minNode;
+			let currCost = Number.POSITIVE_INFINITY;
+			let index;
+		
+			stack.forEach((node, i) => {
+				if(node.cost < currCost) {
+					minNode = node;
+					currCost = node.cost;
+					index = i;
+				}
+			});
+		
+			//delete this node 
+			stack.splice(index, 1);
+		
+			return minNode;
+		
+		}
+		
+		function heuristics(state) {
+			let cost = 0;
+			let _temp = [...state];
+		
+			while (_temp.length < 10) {
+				_temp.push(0);
+			}
+			
+			cost = Math.abs(18 - (_temp[N['A']] + _temp[N['D']] + _temp[N['E']]));
+			cost += Math.abs(19 - (_temp[N['A']] + _temp[N['C']] + _temp[N['D']]));
+			cost += Math.abs(16 - (_temp[N['D']] + _temp[N['E']] + _temp[N['G']]));
+			cost += Math.abs(22 - (_temp[N['G']] + _temp[N['H']] + _temp[N['J']]));
+			cost += Math.abs(17 - (_temp[N['F']] + _temp[N['H']] + _temp[N['I']]));
+			cost += Math.abs(11 - (_temp[N['B']] + _temp[N['C']] + _temp[N['F']]));
+			
+		
+			return cost;
+		}
+		
+		function expand2(parent, explored) {
+			let basicArr = [1,2,3,4,5,6,7,8,9,10];
+			let qNodes = [];
+			
+			while (basicArr.length > 0) {
+				let temp = [...parent.state];
+				let basicNum = basicArr.pop();
+				let isDuplicate = false;
+		
+				if(temp.indexOf(basicNum) === -1) {
+					temp.push(basicNum);
+				}
+				
+				explored.forEach(obj => {
+					if (obj.state.join() === temp.join()) {
+						isDuplicate = true;
+					}
+				});
+		
+				qNodes.forEach(obj => {
+					if (obj.state.join() === temp.join()) {
+						isDuplicate = true;
+					}
+				});
+				
+				if (!isDuplicate && possibleNode(temp)) {
+					// qNodes.push([...temp]);
+					qNodes.push(new node(parent.depth + 1, [...temp], parent.cost + heuristics(temp), parent));
+				}
+			}
+		
+			return qNodes;
+		
+		}
+		
+		function uniformCostSearch(root) {
+			let stack = [ root ];
+			let explored = [];
+			let isFound = false;
+			let resolve;
+		
+			while (stack.length > 0 && !isFound) {
+				let curr = findMin(stack);
+				let currNodes = [];
+				explored.push(curr);
+				postMessage(curr);
+		
+		
+				if (curr.state.length === 10) {
+					if (TEST_GOAL(curr.state)) {
+						resolve = curr;
+						isFound = true;
+						console.log('find:', curr);
+					}
+				}
+		
+				//Expand node
+				currNodes = expand2(curr, explored);
+				if (currNodes.length > 0) {
+					stack.push(...currNodes);
+				}
+		
+			}
+		
+			return resolve;
+		};
+		
+		
+		
+		onmessage = function(e) {
+			switch(e.data) {
+				case 'BFS' : 
+					traverseBFS(new node(0, initArr, 0, null));
+					break;
+				case 'DFS' : 
+					traverseDFS(new node(0, initArr, 0, null));
+					break;
+				case 'UCS' : 
+					uniformCostSearch(new node(0, initArr, 0, null));
+					break;
+				default:
+					BruteForce();
+					break;
+			}
+		}
+		
+	}
+
+	</script>
+
+	<script>
+
+		if (window.Worker) {
+			// const myWorker = new Worker("puzzle.js");
+			const myWorker = new Worker(URL.createObjectURL(new Blob(["("+worker_function.toString()+")()"], {type: 'text/javascript'})));
+			const NUM_ID_MAP  = {
+				0: 'a',
+				1: 'b',
+				2: 'c',
+				3: 'd',
+				4: 'e',
+				5: 'f',
+				6: 'g',
+				7: 'h',
+				8: 'i',
+				9: 'j'
+			};
+
+			myWorker.onmessage = function(e) {
+				const node = e.data;
+				node.state.forEach((val, i) => {
+					if(NUM_ID_MAP[i]) {
+						document.querySelector('#' + NUM_ID_MAP[i]).innerHTML = val;
+					}
+				});
+				document.querySelector('#depth').innerHTML = node.depth;
+			}
+
+			function run(type) {
+				Object.values(NUM_ID_MAP).forEach(id => {
+					document.querySelector('#' + id).innerHTML = '';
+				});
+				document.querySelector('#depth').innerHTML = '';
+				
+				myWorker.postMessage(type);
+			}
+
+
+		}else{
+			alert('Not support this browser. Please use Chrome');
+		}
+
+	</script>
+</body>
+</html>
+
+
